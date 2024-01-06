@@ -3,6 +3,7 @@ package processing.sound;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +59,11 @@ public class SoundFile extends AudioSample {
 			try {
 				fin = parent.createInput(path);
 			} catch (Exception e) {
-				fin = new FileInputStream(path);
+				try {
+					fin = new FileInputStream(path);
+				} catch (Exception e1) {
+					fin = null;
+				}
 			}
 
 			// if PApplet.createInput() can't find the file or URL, it prints
@@ -76,10 +81,11 @@ public class SoundFile extends AudioSample {
 				// not wav/aiff -- try converting via JavaSound...
 				try {
 					// stream was modified by first read attempt, so re-create it
+					AudioInputStream in;
 					try {
-						AudioInputStream in = AudioSystem.getAudioInputStream(parent.createInput(path));
-					} catch (Exception e) {
-						AudioInputStream in = AudioSystem.getAudioInputStream(new FileInputStream(path));
+						in = AudioSystem.getAudioInputStream(parent.createInput(path));
+					} catch (Exception e1) {
+						in = AudioSystem.getAudioInputStream(new FileInputStream(path));
 					}
 					// https://docs.oracle.com/javase%2Ftutorial%2F/sound/converters.html
 					// https://stackoverflow.com/questions/41784397/convert-mp3-to-wav-in-java
