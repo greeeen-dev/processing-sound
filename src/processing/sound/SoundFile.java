@@ -54,7 +54,7 @@ public class SoundFile extends AudioSample {
 		this.sample = SoundFile.SAMPLECACHE.get(path);
 
 		if (this.sample == null) {
-			InputStream fin = parent.createInput(path);
+			InputStream fin = new FileInputStream(path);
 
 			// if PApplet.createInput() can't find the file or URL, it prints
 			// an error message and fin returns null. In this case we can just
@@ -71,7 +71,7 @@ public class SoundFile extends AudioSample {
 				// not wav/aiff -- try converting via JavaSound...
 				try {
 					// stream was modified by first read attempt, so re-create it
-					AudioInputStream in = AudioSystem.getAudioInputStream(parent.createInput(path));
+					AudioInputStream in = AudioSystem.getAudioInputStream(new FileInputStream(path));
 					// https://docs.oracle.com/javase%2Ftutorial%2F/sound/converters.html
 					// https://stackoverflow.com/questions/41784397/convert-mp3-to-wav-in-java
 					AudioFormat targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
